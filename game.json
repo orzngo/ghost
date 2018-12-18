@@ -1,0 +1,110 @@
+{
+	"width": 640,
+	"height": 360,
+	"fps": 30,
+	"main": "./script/main.js",
+	"assets": {
+		"face": {
+			"type": "image",
+			"width": 192,
+			"height": 64,
+			"path": "image/face.png"
+		},
+		"firstfont": {
+			"type": "image",
+			"width": 320,
+			"height": 288,
+			"path": "image/firstfont.png",
+			"global": true
+		},
+		"ghost": {
+			"type": "image",
+			"width": 192,
+			"height": 64,
+			"path": "image/ghost.png"
+		},
+		"item": {
+			"type": "image",
+			"width": 64,
+			"height": 64,
+			"path": "image/item.png"
+		},
+		"dead": {
+			"type": "audio",
+			"path": "audio/dead",
+			"systemId": "sound",
+			"duration": 604
+		},
+		"eat": {
+			"type": "audio",
+			"path": "audio/eat",
+			"systemId": "sound",
+			"duration": 200
+		},
+		"meet": {
+			"type": "audio",
+			"path": "audio/meet",
+			"systemId": "sound",
+			"duration": 568
+		},
+		"Ghost": {
+			"type": "script",
+			"path": "script/entities/Ghost.js",
+			"global": true
+		},
+		"main": {
+			"type": "script",
+			"path": "script/main.js",
+			"global": true
+		},
+		"DescriptionScene": {
+			"type": "script",
+			"path": "script/scenes/DescriptionScene.js",
+			"global": true
+		},
+		"LoadingScene": {
+			"type": "script",
+			"path": "script/scenes/LoadingScene.js",
+			"global": true
+		},
+		"MainScene": {
+			"type": "script",
+			"path": "script/scenes/MainScene.js",
+			"global": true
+		},
+		"MyInitialScene": {
+			"type": "script",
+			"path": "script/scenes/MyInitialScene.js",
+			"global": true
+		},
+		"ResultScene": {
+			"type": "script",
+			"path": "script/scenes/ResultScene.js",
+			"global": true
+		},
+		"TitleScene": {
+			"type": "script",
+			"path": "script/scenes/TitleScene.js",
+			"global": true
+		},
+		"RPGAtsumaru": {
+			"type": "script",
+			"path": "script/services/game.nicovideo.jp/RPGAtsumaru.js",
+			"global": true
+		},
+		"RPGAtsumaruApi": {
+			"type": "script",
+			"path": "script/services/game.nicovideo.jp/RPGAtsumaruApi.js",
+			"global": true
+		}
+	},
+	"environment": {
+		"niconico": {
+			"supportedModes": [
+				"single",
+				"ranking"
+			]
+		},
+		"sandbox-runtime": "2"
+	}
+}
