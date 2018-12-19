@@ -18,11 +18,6 @@ export class MainScene extends g.Scene {
 
     initialize(): void {
         this.append(new g.FilledRect({scene: this, width: g.game.width, height: g.game.height, cssColor: "white"}));
-
-        const ghost = new Ghost({scene: this});
-        this.append(ghost);
-        ghost.start();
-
         this.update.add(() => {
             this.mainLoop();
         });

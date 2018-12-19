@@ -1,10 +1,16 @@
 export class Ghost extends g.E {
+    static ID: number = 0;
 
     body: g.FrameSprite;
     face: g.FrameSprite;
 
+    id: number;
+    speed: number = 5;
+
     constructor(params: g.EParameterObject, faceId: number = 0) {
         super(params);
+        this.id = Ghost.ID;
+        Ghost.ID++;
 
         this.body = new g.FrameSprite({
             src: (<g.ImageAsset>this.scene.assets["ghost"]),
@@ -41,5 +47,4 @@ export class Ghost extends g.E {
     stop(): void {
         this.body.stop();
     }
-
 }
