@@ -12,9 +12,23 @@ export class Team {
         this.members.push(ghost);
     }
 
+    /**
+     * 指定したゴーストを外す
+     * 指定したゴーストより後ろにいるゴーストも外す
+     *
+     * @param {Ghost} ghost
+     */
     kick(ghost: Ghost): void {
-
-
+        const targetIndex = this.getIndex(ghost);
+        const newMembers: Ghost[] = [];
+        this.members.forEach((member: Ghost, index: number) => {
+            if (index < targetIndex) {
+                newMembers.push(member);
+            } else {
+                member.kill();
+            }
+        });
+        this.members = newMembers;
     }
 
 
@@ -34,7 +48,7 @@ export class Team {
             return 0;
         }
 
-        return this.members[0].speed;
+        return this.members[0].getSpeed();
     }
 
 }

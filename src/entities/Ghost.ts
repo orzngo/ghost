@@ -5,9 +5,9 @@ export class Ghost extends g.E {
     face: g.FrameSprite;
 
     id: number;
-    speed: number = 5;
+    isDead: boolean = false;
 
-    constructor(params: g.EParameterObject, faceId: number = 0) {
+    constructor(params: g.EParameterObject, public ghostParams: GhostParams = DefaultGhost) {
         super(params);
         this.id = Ghost.ID;
         Ghost.ID++;
@@ -33,7 +33,7 @@ export class Ghost extends g.E {
             srcWidth: 32,
             srcHeight: 32,
             scene: this.scene,
-            frames: [faceId],
+            frames: [this.ghostParams.faceId],
             interval: 0
         });
         this.face.x = 32;
@@ -47,4 +47,34 @@ export class Ghost extends g.E {
     stop(): void {
         this.body.stop();
     }
+
+    getSpeed(): number {
+        return this.ghostParams.speed;
+    }
+
+    kill(): void {
+        this.isDead = true;
+    }
+
+    onUpdate(): void {
+        if (!this.isDead) {
+            return;
+        }
+    }
 }
+
+export interface GhostParams {
+    faceId: number;
+    speed: number;
+    reactionSpeed: number;
+    upSpeed: number;
+    downSpeed: number;
+}
+
+const DefaultGhost: GhostParams = {
+    faceId: 0,
+    speed: 5,
+    reactionSpeed: 5,
+    upSpeed: 5,
+    downSpeed: 5
+};
