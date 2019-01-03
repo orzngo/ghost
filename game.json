@@ -47,11 +47,6 @@
 			"systemId": "sound",
 			"duration": 568
 		},
-		"Ghost": {
-			"type": "script",
-			"path": "script/entities/Ghost.js",
-			"global": true
-		},
 		"main": {
 			"type": "script",
 			"path": "script/main.js",
@@ -95,6 +90,41 @@
 		"RPGAtsumaruApi": {
 			"type": "script",
 			"path": "script/services/game.nicovideo.jp/RPGAtsumaruApi.js",
+			"global": true
+		},
+		"Ghost": {
+			"type": "script",
+			"path": "script/entities/ghosts/Ghost.js",
+			"global": true
+		},
+		"GhostRepository": {
+			"type": "script",
+			"path": "script/entities/ghosts/GhostRepository.js",
+			"global": true
+		},
+		"Team": {
+			"type": "script",
+			"path": "script/entities/ghosts/Team.js",
+			"global": true
+		},
+		"Item": {
+			"type": "script",
+			"path": "script/entities/items/Item.js",
+			"global": true
+		},
+		"ItemRepository": {
+			"type": "script",
+			"path": "script/entities/items/ItemRepository.js",
+			"global": true
+		},
+		"Layer": {
+			"type": "script",
+			"path": "script/entities/layers/Layer.js",
+			"global": true
+		},
+		"LayerManager": {
+			"type": "script",
+			"path": "script/entities/layers/LayerManager.js",
 			"global": true
 		}
 	},

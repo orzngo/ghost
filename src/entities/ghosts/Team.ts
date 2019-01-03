@@ -1,8 +1,10 @@
-import {Ghost} from "./Ghost";
+import {ActionOrder, Ghost} from "./Ghost";
+import {Layer} from "../layers/Layer";
 
 export class Team {
 
     members: Ghost[] = [];
+    actionOrder:ActionOrder | undefined;
 
     constructor() {
 
@@ -10,6 +12,12 @@ export class Team {
 
     append(ghost: Ghost): void {
         this.members.push(ghost);
+    }
+
+    appendMembersTo(target:Layer):void {
+        this.members.reverse().forEach((ghost) =>{
+            target.append(ghost);
+        });
     }
 
     /**
@@ -51,4 +59,7 @@ export class Team {
         return this.members[0].getSpeed();
     }
 
+    order(order:ActionOrder):void {
+        this.actionOrder = order;
+    }
 }

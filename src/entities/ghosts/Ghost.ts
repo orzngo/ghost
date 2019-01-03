@@ -1,11 +1,12 @@
 export class Ghost extends g.E {
-    static ID: number = 0;
+    private static ID: number = 0;
 
     body: g.FrameSprite;
     face: g.FrameSprite;
 
     id: number;
     isDead: boolean = false;
+    actionOrder:ActionOrder | undefined;
 
     constructor(params: g.EParameterObject, public ghostParams: GhostParams = DefaultGhost) {
         super(params);
@@ -40,6 +41,7 @@ export class Ghost extends g.E {
         this.body.append(this.face);
     }
 
+
     start(): void {
         this.body.start();
     }
@@ -54,11 +56,23 @@ export class Ghost extends g.E {
 
     kill(): void {
         this.isDead = true;
+        this.opacity = 0.5;
+        this.modified();
+    }
+
+    order(order:ActionOrder):void {
+        this.actionOrder = order;
     }
 
     onUpdate(): void {
-        if (!this.isDead) {
+        if (this.destroyed()) {
             return;
+        }
+
+        if (this.actionOrder.order === "down") {
+            this.y+= this.ghostParams.downSpeed / g.game.fps;
+        } else if (this.actionOrder.order === "up") {
+            this.y-= this.ghostParams.upSpeed / g.game.fps;
         }
     }
 }
@@ -75,6 +89,11 @@ const DefaultGhost: GhostParams = {
     faceId: 0,
     speed: 5,
     reactionSpeed: 5,
-    upSpeed: 5,
-    downSpeed: 5
+    upSpeed: 32,
+    downSpeed: 32
 };
+
+export interface ActionOrder {
+    frameCount:number;
+    order:"up" | "down" | "keep";
+}
