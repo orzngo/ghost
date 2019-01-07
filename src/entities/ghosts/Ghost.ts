@@ -1,3 +1,6 @@
+import {MainScene} from "../../scenes/MainScene";
+import {Team} from "./Team";
+
 export class Ghost extends g.E {
     private static ID: number = 0;
 
@@ -6,7 +9,7 @@ export class Ghost extends g.E {
 
     id: number;
     isDead: boolean = false;
-    actionOrder:ActionOrder | undefined;
+    actionOrder: ActionOrder | undefined;
 
     constructor(params: g.EParameterObject, public ghostParams: GhostParams = DefaultGhost) {
         super(params);
@@ -60,19 +63,25 @@ export class Ghost extends g.E {
         this.modified();
     }
 
-    order(order:ActionOrder):void {
+    order(order: ActionOrder): void {
         this.actionOrder = order;
     }
 
-    onUpdate(): void {
+    onUpdate(frameCount: number, team: Team): void {
         if (this.destroyed()) {
             return;
         }
 
-        if (this.actionOrder.order === "down") {
-            this.y+= this.ghostParams.downSpeed / g.game.fps;
-        } else if (this.actionOrder.order === "up") {
-            this.y-= this.ghostParams.upSpeed / g.game.fps;
+        const teamIndex = team.getIndex(this);
+
+        if (teamIndex >= 0) {
+            if (this.actionOrder.order === "down") {
+                this.y += this.ghostParams.downSpeed / g.game.fps;
+            } else if (this.actionOrder.order === "up") {
+                this.y -= this.ghostParams.upSpeed / g.game.fps;
+            }
+        } else { // 野良ゴーストの処理
+            this.x -= team.getSpeed();
         }
     }
 }
@@ -94,6 +103,6 @@ const DefaultGhost: GhostParams = {
 };
 
 export interface ActionOrder {
-    frameCount:number;
-    order:"up" | "down" | "keep";
+    frameCount: number;
+    order: "up" | "down" | "keep";
 }

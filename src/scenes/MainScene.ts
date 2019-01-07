@@ -9,7 +9,7 @@ declare var window: any;
 export class MainScene extends g.Scene {
     frameCount: number = 0;
 
-    ghostRepository:GhostRepository;
+    ghostRepository: GhostRepository;
     isRunning: boolean;
 
     backgroundLayer: Layer;
@@ -18,7 +18,7 @@ export class MainScene extends g.Scene {
 
 
     // gameまわり
-    team:Team = new Team();
+    team: Team = new Team();
 
     constructor(public remainingTime: number) {
         super({game: g.game, assetIds: ["ghost", "item", "face"]});
@@ -37,27 +37,33 @@ export class MainScene extends g.Scene {
     }
 
     initialize(): void {
-        this.backgroundLayer.append(new g.FilledRect({scene: this, width: g.game.width, height: g.game.height, cssColor: "white"}));
+        this.backgroundLayer.append(new g.FilledRect({
+            scene: this,
+            width: g.game.width,
+            height: g.game.height,
+            cssColor: "white"
+        }));
         this.update.add(() => {
             this.mainLoop();
         });
-
-
         this.team = new Team();
         const firstGhost = this.ghostRepository.create(0);
         firstGhost.x = (this.game.width / 2) - (firstGhost.width / 2);
         firstGhost.y = (this.game.height / 2) - (firstGhost.height / 2);
         this.team.append(firstGhost);
         this.team.appendMembersTo(this.gameLayer);
-        this.team.order({frameCount:0, order:"down"});
+        this.team.order({frameCount: 0, order: "down"});
         this.isRunning = true;
     }
 
     mainLoop(): void {
 
         this.frameCount++;
+
+        this.team.onUpdate();
+
         this.ghostRepository.ghosts.forEach((ghost) => {
-            ghost.onUpdate();
+            ghost.onUpdate(this.frameCount, this.team);
         });
 
 
@@ -71,11 +77,11 @@ export class MainScene extends g.Scene {
         }
     }
 
-    onPointDown(e:g.PointDownEvent):void {
+    onPointDown(e: g.PointDownEvent): void {
 
     }
 
-    onPointUp(e:g.PointUpEvent):void {
+    onPointUp(e: g.PointUpEvent): void {
 
     }
 
