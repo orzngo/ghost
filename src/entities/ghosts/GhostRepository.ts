@@ -1,16 +1,16 @@
 import {Ghost} from "./Ghost";
 
 export class GhostRepository {
-    ghosts:Ghost[] =[];
+    ghosts: Ghost[] = [];
 
-    scene:g.Scene;
+    scene: g.Scene;
 
-    constructor(scene:g.Scene) {
+    constructor(scene: g.Scene) {
         this.scene = scene;
     }
 
     // factoryつくんのめんどい
-    create(faceId:number, withSave:boolean = true):Ghost {
+    create(faceId: number, withSave: boolean = true): Ghost {
         if (faceId > ghostParams.length) {
             throw new Error("Invalid faceId");
         }
@@ -23,12 +23,12 @@ export class GhostRepository {
     }
 
 
-    save(ghost:Ghost):void {
+    save(ghost: Ghost): void {
         this.ghosts.push(ghost);
     }
 
-    delete(target:Ghost):void {
-        const newGhosts:Ghost[] = [];
+    delete(target: Ghost): void {
+        const newGhosts: Ghost[] = [];
         this.ghosts.forEach((ghost) => {
             if (target.id === ghost.id) {
                 return;
@@ -38,7 +38,7 @@ export class GhostRepository {
         this.ghosts = newGhosts;
     }
 
-    reset():void {
+    reset(): void {
         this.ghosts.forEach((ghost) => {
             ghost.destroy();
         });
@@ -51,15 +51,15 @@ const ghostParams = [
     {
         faceId: 0,
         speed: 5,
-        reactionSpeed: 5,
-        upSpeed: 16,
-        downSpeed: 16
+        reactionSpeed: 10,
+        upSpeed: 32,
+        downSpeed: 32
     },
     {
         faceId: 1,
         speed: 5,
-        reactionSpeed: 5,
-        upSpeed: 16,
-        downSpeed: 16
+        reactionSpeed: 10,
+        upSpeed: 32,
+        downSpeed: 32
     }
 ];

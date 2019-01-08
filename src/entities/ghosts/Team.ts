@@ -10,14 +10,23 @@ export class Team {
 
     }
 
-    append(ghost: Ghost): void {
+    append(ghost: Ghost, frameCount: number = 0): void {
         this.members.push(ghost);
+        if (this.members.length === 1) {
+            ghost.x = (g.game.width / 2) - (ghost.width / 2);
+            ghost.y = (g.game.height / 2) - (ghost.height / 2);
+        } else {
+            const front = this.getFrontMember(ghost);
+            ghost.x = front.x - 16;
+            ghost.y = front.y;
+            ghost.order({frameCount: frameCount, order: "keep"});
+        }
     }
 
     appendMembersTo(target: Layer): void {
-        this.members.reverse().forEach((ghost) => {
-            target.append(ghost);
-        });
+        for (let i = this.members.length - 1; i >= 0; i--) {
+            target.append(this.members[i]);
+        }
     }
 
     /**

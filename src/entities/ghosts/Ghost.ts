@@ -75,13 +75,39 @@ export class Ghost extends g.E {
         const teamIndex = team.getIndex(this);
 
         if (teamIndex >= 0) {
+            this.updateOrder(frameCount, team, teamIndex);
+
+            if (!this.actionOrder) {
+                return;
+            }
+
             if (this.actionOrder.order === "down") {
                 this.y += this.ghostParams.downSpeed / g.game.fps;
             } else if (this.actionOrder.order === "up") {
                 this.y -= this.ghostParams.upSpeed / g.game.fps;
             }
+            this.modified();
         } else { // 野良ゴーストの処理
-            this.x -= team.getSpeed();
+            this.x -= team.getSpeed() / g.game.fps;
+        }
+    }
+
+    private updateOrder(frameCount: number, team: Team, index: number): void {
+        if (index < 0 || index === undefined) {
+            return;
+        }
+        if (index === 0) {
+            this.order(team.actionOrder);
+        } else {
+            const front = team.getFrontMember(this);
+            if (front) {
+                if (frameCount - front.actionOrder.frameCount >= this.ghostParams.reactionSpeed) {
+                    this.order({
+                        frameCount: front.actionOrder.frameCount + this.ghostParams.reactionSpeed,
+                        order: front.actionOrder.order
+                    });
+                }
+            }
         }
     }
 }

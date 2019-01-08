@@ -46,11 +46,18 @@ export class MainScene extends g.Scene {
         this.update.add(() => {
             this.mainLoop();
         });
+        this.pointDownCapture.add((e: g.PointDownEvent) => {
+            this.onPointDown(e);
+        });
+        this.pointUpCapture.add((e: g.PointUpEvent) => {
+            this.onPointUp(e);
+        });
         this.team = new Team();
-        const firstGhost = this.ghostRepository.create(0);
-        firstGhost.x = (this.game.width / 2) - (firstGhost.width / 2);
-        firstGhost.y = (this.game.height / 2) - (firstGhost.height / 2);
-        this.team.append(firstGhost);
+
+        this.team.append(this.ghostRepository.create(0));
+        this.team.append(this.ghostRepository.create(1));
+        this.team.append(this.ghostRepository.create(0));
+        this.team.append(this.ghostRepository.create(0));
         this.team.appendMembersTo(this.gameLayer);
         this.team.order({frameCount: 0, order: "down"});
         this.isRunning = true;
@@ -61,11 +68,11 @@ export class MainScene extends g.Scene {
         this.frameCount++;
 
         this.team.onUpdate();
+        (<any>window).console.log(this.team.actionOrder);
 
         this.ghostRepository.ghosts.forEach((ghost) => {
             ghost.onUpdate(this.frameCount, this.team);
         });
-
 
         // 終了演出のため、残り時間より少し早めにゲームを止める
         if (this.getRemainingTime() === 5 && this.isRunning) {
@@ -78,10 +85,18 @@ export class MainScene extends g.Scene {
     }
 
     onPointDown(e: g.PointDownEvent): void {
+        // 上昇中でなかったら上昇命令を出す
+        if (this.team.actionOrder.order !== "up") {
+            this.team.order({frameCount: this.frameCount, order: "up"});
 
+        }
     }
 
     onPointUp(e: g.PointUpEvent): void {
+        //上昇中だったら下降命令を出す
+        if (this.team.actionOrder.order === "up") {
+            this.team.order({frameCount: this.frameCount, order: "down"});
+        }
 
     }
 
