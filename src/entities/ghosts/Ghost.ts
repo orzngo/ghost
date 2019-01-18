@@ -96,17 +96,22 @@ export class Ghost extends g.E {
         if (index < 0 || index === undefined) {
             return;
         }
+
+        // 先頭の場合、チームのオーダーを自身のオーダーとする
         if (index === 0) {
             this.order(team.actionOrder);
-        } else {
+        } else { // 後続の場合、基本的には前方と距離が離れたらupdateする
             const front = team.getFrontMember(this);
             if (front) {
-                if (frameCount - front.actionOrder.frameCount >= this.ghostParams.reactionSpeed) {
-                    this.order({
-                        frameCount: front.actionOrder.frameCount + this.ghostParams.reactionSpeed,
-                        order: front.actionOrder.order
-                    });
+                const distance = front.y - this.y;
+                if (distance > this.ghostParams.distance) {
+                    this.order({order: "down", frameCount: frameCount});
+                } else if (distance < -this.ghostParams.distance) {
+                    this.order({order: "up", frameCount: frameCount});
+                } else {
+                    //this.order({order: "keep", frameCount: frameCount});
                 }
+
             }
         }
     }
@@ -118,6 +123,7 @@ export interface GhostParams {
     reactionSpeed: number;
     upSpeed: number;
     downSpeed: number;
+    distance: number;
 }
 
 const DefaultGhost: GhostParams = {
@@ -125,7 +131,8 @@ const DefaultGhost: GhostParams = {
     speed: 5,
     reactionSpeed: 5,
     upSpeed: 32,
-    downSpeed: 32
+    downSpeed: 32,
+    distance: 10
 };
 
 export interface ActionOrder {

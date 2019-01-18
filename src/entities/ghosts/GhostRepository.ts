@@ -52,14 +52,16 @@ const ghostParams = [
         faceId: 0,
         speed: 5,
         reactionSpeed: 10,
-        upSpeed: 32,
-        downSpeed: 32
+        upSpeed: 60,
+        downSpeed: 60,
+        distance: 15,
     },
     {
         faceId: 1,
         speed: 5,
         reactionSpeed: 10,
-        upSpeed: 32,
-        downSpeed: 32
+        upSpeed: 45,
+        downSpeed: 45,
+        distance: 20,
     }
 ];
