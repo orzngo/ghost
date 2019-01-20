@@ -20,6 +20,8 @@ export class MainScene extends g.Scene {
 
     // gameまわり
     team: Team = new Team();
+    createdGhostCount: number = 0;
+    createdItemCount: number = 0;
 
     constructor(public remainingTime: number) {
         super({game: g.game, assetIds: ["ghost", "item", "face"]});
@@ -57,14 +59,6 @@ export class MainScene extends g.Scene {
         this.team = new Team();
 
         this.team.append(this.ghostRepository.create(0));
-        this.team.append(this.ghostRepository.create(1));
-        this.team.append(this.ghostRepository.create(2));
-        this.team.append(this.ghostRepository.create(3));
-        this.team.append(this.ghostRepository.create(4));
-        this.team.append(this.ghostRepository.create(5));
-        this.team.append(this.ghostRepository.create(3));
-        this.team.append(this.ghostRepository.create(4));
-        this.team.append(this.ghostRepository.create(5));
         this.team.appendMembersTo(this.gameLayer);
 
         this.team.order({frameCount: 0, order: "down"});
@@ -125,11 +119,17 @@ export class MainScene extends g.Scene {
             itemId = 1;
         }
 
+        if (this.createdItemCount < 10) {
+            itemId = 0;
+        }
+
         const item = this.itemRepository.create(itemId);
         item.x = g.game.width;
         item.y = g.game.random.get(0, g.game.height - item.height);
 
         this.gameLayer.append(item);
+
+        this.createdItemCount++;
         if (this.itemRepository.items.length <= 1) {
             return;
         }
@@ -146,6 +146,19 @@ export class MainScene extends g.Scene {
     }
 
     createNomadGhost():void {
+        let ghostId = 0;
+        if (this.createdGhostCount < 3) {
+            ghostId = g.game.random.get(0,1);
+        } else {
+            ghostId = g.game.random.get(0,11);
+        }
+
+        const ghost = this.ghostRepository.create(ghostId);
+        ghost.scaleX = -1;
+        ghost.x = g.game.width;
+        ghost.y = g.game.random.get(0, g.game.height - ghost.height);
+        this.gameLayer.append(ghost);
+        this.createdGhostCount++;
 
     }
 

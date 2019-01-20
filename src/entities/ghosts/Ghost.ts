@@ -95,6 +95,7 @@ export class Ghost extends g.E {
             this.modified();
         } else { // 野良ゴーストの処理
             this.x -= team.getSpeed() / g.game.fps;
+            this.modified();
         }
     }
 

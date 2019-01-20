@@ -23,10 +23,34 @@ export class Team {
         }
     }
 
+    /**
+     * ゴーストの描画順を整理する
+     *
+     * @param {Layer} target
+     */
     appendMembersTo(target: Layer): void {
         for (let i = this.members.length - 1; i >= 0; i--) {
             target.append(this.members[i]);
         }
+    }
+
+
+    /**
+     * 指定したゴーストを外す
+     *
+     * @param {Ghost} ghost
+     */
+    kick(ghost: Ghost): void {
+        const targetIndex = this.getIndex(ghost);
+        const newMembers: Ghost[] = [];
+        this.members.forEach((member: Ghost, index: number) => {
+            if (index !== targetIndex) {
+                newMembers.push(member);
+            } else {
+                member.kill();
+            }
+        });
+        this.members = newMembers;
     }
 
     /**
@@ -35,7 +59,7 @@ export class Team {
      *
      * @param {Ghost} ghost
      */
-    kick(ghost: Ghost): void {
+    kickWithBelow(ghost: Ghost): void {
         const targetIndex = this.getIndex(ghost);
         const newMembers: Ghost[] = [];
         this.members.forEach((member: Ghost, index: number) => {
