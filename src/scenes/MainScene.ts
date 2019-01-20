@@ -2,7 +2,7 @@ import {ResultScene} from "./ResultScene";
 import {GhostRepository} from "../entities/ghosts/GhostRepository";
 import {Layer} from "../entities/layers/Layer";
 import {Team} from "../entities/ghosts/Team";
-import {Ghost} from "../entities/ghosts/Ghost";
+import {ItemRepository} from "../entities/items/ItemRepository";
 
 declare var window: any;
 
@@ -10,6 +10,7 @@ export class MainScene extends g.Scene {
     frameCount: number = 0;
 
     ghostRepository: GhostRepository;
+    itemRepository: ItemRepository;
     isRunning: boolean;
 
     backgroundLayer: Layer;
@@ -23,6 +24,7 @@ export class MainScene extends g.Scene {
     constructor(public remainingTime: number) {
         super({game: g.game, assetIds: ["ghost", "item", "face"]});
         this.ghostRepository = new GhostRepository(this);
+        this.itemRepository = new ItemRepository(this);
         this.backgroundLayer = new Layer(this, "background");
         this.gameLayer = new Layer(this, "main");
         this.topLayer = new Layer(this, "top");
@@ -56,9 +58,15 @@ export class MainScene extends g.Scene {
 
         this.team.append(this.ghostRepository.create(0));
         this.team.append(this.ghostRepository.create(1));
-        this.team.append(this.ghostRepository.create(0));
-        this.team.append(this.ghostRepository.create(0));
+        this.team.append(this.ghostRepository.create(2));
+        this.team.append(this.ghostRepository.create(3));
+        this.team.append(this.ghostRepository.create(4));
+        this.team.append(this.ghostRepository.create(5));
+        this.team.append(this.ghostRepository.create(3));
+        this.team.append(this.ghostRepository.create(4));
+        this.team.append(this.ghostRepository.create(5));
         this.team.appendMembersTo(this.gameLayer);
+
         this.team.order({frameCount: 0, order: "down"});
         this.isRunning = true;
     }
@@ -68,11 +76,17 @@ export class MainScene extends g.Scene {
         this.frameCount++;
 
         this.team.onUpdate();
-        (<any>window).console.log(this.team.actionOrder);
-
         this.ghostRepository.ghosts.forEach((ghost) => {
             ghost.onUpdate(this.frameCount, this.team);
         });
+        this.itemRepository.items.forEach((item) => {
+           item.onUpdate(this.team.getSpeed());
+           if (item.x < -item.width) {
+               this.itemRepository.delete(item);
+           }
+        });
+
+        this.checkCreateObject();
 
         // 終了演出のため、残り時間より少し早めにゲームを止める
         if (this.getRemainingTime() === 5 && this.isRunning) {
@@ -100,11 +114,63 @@ export class MainScene extends g.Scene {
 
     }
 
+    createItem(difficulty:number):void {
+        const itemIdRand:number = g.game.random.get(0,100) - difficulty;
+        let itemId:number = 0;
+        if (itemIdRand > 40) {
+            itemId = 0;
+        } else if (g.game.random.get(0,2) === 0){
+            itemId = 2;
+        } else {
+            itemId = 1;
+        }
+
+        const item = this.itemRepository.create(itemId);
+        item.x = g.game.width;
+        item.y = g.game.random.get(0, g.game.height - item.height);
+
+        this.gameLayer.append(item);
+        if (this.itemRepository.items.length <= 1) {
+            return;
+        }
+
+        // 一番最後に作ったアイテムにかぶるY座標の場合、上下いずれかにずらす
+        const lastItem = this.itemRepository.items[this.itemRepository.items.length-1];
+        if (item.y > lastItem.y - lastItem.height && lastItem.y + lastItem.height < item.y) {
+            if (g.game.random.get(0,1) === 0) {
+                item.y += item.height;
+            } else {
+                item.y -= item.height;
+            }
+        }
+    }
+
+    createNomadGhost():void {
+
+    }
+
     finalize(): void {
         g.game.replaceScene(new ResultScene());
     }
 
     getRemainingTime(): number {
         return this.remainingTime - Math.floor(this.frameCount / this.game.fps);
+    }
+
+    checkCreateObject():void {
+        const difficulty:number = Math.floor(this.frameCount / (g.game.fps * 10)) + 1;
+        if (this.frameCount % 2 === 0) {
+            return;
+        }
+
+        if (g.game.random.get(0,100) > difficulty) {
+            return;
+        }
+
+        if (g.game.random.get(0,5) === 0) {
+            this.createNomadGhost();
+        } else {
+            this.createItem(difficulty);
+        }
     }
 }

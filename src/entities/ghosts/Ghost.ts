@@ -86,6 +86,12 @@ export class Ghost extends g.E {
             } else if (this.actionOrder.order === "up") {
                 this.y -= this.ghostParams.upSpeed / g.game.fps;
             }
+
+            if (this.y <0) {
+                this.y = 0;
+            } else if (this.y > g.game.height - this.height) {
+                this.y = g.game.height - this.height;
+            }
             this.modified();
         } else { // 野良ゴーストの処理
             this.x -= team.getSpeed() / g.game.fps;

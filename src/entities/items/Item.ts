@@ -20,10 +20,12 @@ export class Item extends g.FrameSprite {
         Item.ID++;
     }
 
-    onUpdate(){
+    onUpdate(speed:number){
         if (this.destroyed()) {
             return;
         }
+
+        this.x -= speed / g.game.fps;
     }
 
 }

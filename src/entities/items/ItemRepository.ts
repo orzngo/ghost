@@ -2,7 +2,7 @@ import {Item} from "./Item";
 
 export class ItemRepository {
     items:Item[] = [];
-    constructor(public scene:g.Scene, public difficulty:number = 1) {
+    constructor(public scene:g.Scene) {
 
     }
 
@@ -33,5 +33,6 @@ export class ItemRepository {
             newItems.push(item);
         });
         this.items = newItems;
+        target.destroy();
     }
 }

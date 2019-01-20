@@ -36,6 +36,7 @@ export class GhostRepository {
             newGhosts.push(ghost);
         });
         this.ghosts = newGhosts;
+        target.destroy();
     }
 
     reset(): void {
@@ -50,7 +51,7 @@ export class GhostRepository {
 const ghostParams = [
     {
         faceId: 0,
-        speed: 5,
+        speed: 20,
         reactionSpeed: 10,
         upSpeed: 60,
         downSpeed: 60,
@@ -58,10 +59,90 @@ const ghostParams = [
     },
     {
         faceId: 1,
-        speed: 5,
+        speed: 20,
+        reactionSpeed: 10,
+        upSpeed: 50,
+        downSpeed: 50,
+        distance: 20,
+    },
+    {
+        faceId: 2,
+        speed: 20,
+        reactionSpeed: 10,
+        upSpeed: 80,
+        downSpeed: 80,
+        distance: 50,
+    },
+    {
+        faceId: 3,
+        speed: 6,
+        reactionSpeed: 10,
+        upSpeed: 80,
+        downSpeed: 50,
+        distance: 20,
+    },
+    {
+        faceId: 4,
+        speed: 7,
+        reactionSpeed: 10,
+        upSpeed: 50,
+        downSpeed: 80,
+        distance: 20,
+    },
+    {
+        faceId: 5,
+        speed: 20,
+        reactionSpeed: 10,
+        upSpeed: 60,
+        downSpeed: 60,
+        distance: 20,
+    },
+    {
+        faceId: 6,
+        speed: 20,
+        reactionSpeed: 10,
+        upSpeed: 60,
+        downSpeed: 60,
+        distance: 20,
+    },
+    {
+        faceId: 7,
+        speed: 20,
+        reactionSpeed: 10,
+        upSpeed: 50,
+        downSpeed: 50,
+        distance: 20,
+    },
+    {
+        faceId: 8,
+        speed: 20,
         reactionSpeed: 10,
         upSpeed: 45,
         downSpeed: 45,
         distance: 20,
-    }
+    },
+    {
+        faceId: 9,
+        speed: 20,
+        reactionSpeed: 10,
+        upSpeed: 45,
+        downSpeed: 45,
+        distance: 20,
+    },
+    {
+        faceId: 10,
+        speed: 20,
+        reactionSpeed: 10,
+        upSpeed: 45,
+        downSpeed: 45,
+        distance: 20,
+    },
+    {
+        faceId: 11,
+        speed: 20,
+        reactionSpeed: 10,
+        upSpeed: 45,
+        downSpeed: 45,
+        distance: 20,
+    },
 ];
