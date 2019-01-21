@@ -10,16 +10,15 @@ export class Team {
 
     }
 
-    append(ghost: Ghost, frameCount: number = 0): void {
+    append(ghost: Ghost): void {
         this.members.push(ghost);
         if (this.members.length === 1) {
             ghost.x = (g.game.width / 2) - (ghost.width / 2);
-            ghost.y = (g.game.height / 2) - (ghost.height / 2);
         } else {
             const front = this.getFrontMember(ghost);
             ghost.x = front.x - 16;
             ghost.y = front.y;
-            ghost.order({frameCount: frameCount, order: "keep"});
+            ghost.order({frameCount: 0, order: "keep"});
         }
     }
 
@@ -42,15 +41,15 @@ export class Team {
      */
     kick(ghost: Ghost): void {
         const targetIndex = this.getIndex(ghost);
-        const newMembers: Ghost[] = [];
-        this.members.forEach((member: Ghost, index: number) => {
+        const oldMembers = this.members;
+        this.members = [];
+        oldMembers.forEach((member: Ghost, index: number) => {
             if (index !== targetIndex) {
-                newMembers.push(member);
+                this.append(ghost);
             } else {
                 member.kill();
             }
         });
-        this.members = newMembers;
     }
 
     /**

@@ -62,7 +62,7 @@ export class Ghost extends g.E {
 
     kill(): void {
         this.isDead = true;
-        this.opacity = 0.5;
+        //this.opacity = 0.5;
         this.modified();
     }
 
@@ -82,7 +82,6 @@ export class Ghost extends g.E {
         const teamIndex = team.getIndex(this);
 
         if (teamIndex >= 0) {
-
             this.updateEating(team);
 
             this.updateOrder(frameCount, team, teamIndex);
@@ -105,6 +104,9 @@ export class Ghost extends g.E {
             this.modified();
         } else { // 野良ゴーストの処理
             this.x -= team.getSpeed() / g.game.fps;
+            if (this.isDead) {
+                this.y -= 60 * g.game.fps;
+            }
             this.modified();
         }
     }

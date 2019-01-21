@@ -59,7 +59,16 @@ export class MainScene extends g.Scene {
         });
         this.team = new Team();
 
+        const firstGhost = this.ghostRepository.create(0);
+        firstGhost.x = (g.game.width / 2) - (firstGhost.width / 2);
+        firstGhost.y = (g.game.height / 2) - (firstGhost.height / 2);
+
+        this.team.append(firstGhost);
         this.team.append(this.ghostRepository.create(0));
+        this.team.append(this.ghostRepository.create(0));
+        this.team.append(this.ghostRepository.create(0));
+        this.team.append(this.ghostRepository.create(0));
+
         this.team.appendMembersTo(this.gameLayer);
 
         this.team.order({frameCount: 0, order: "down"});
@@ -73,6 +82,9 @@ export class MainScene extends g.Scene {
         this.team.onUpdate();
         this.ghostRepository.ghosts.forEach((ghost) => {
             ghost.onUpdate(this.frameCount, this.team);
+            if (ghost.y < -ghost.height || ghost.x < -ghost.width) {
+                this.ghostRepository.delete(ghost);
+            }
         });
         this.itemRepository.items.forEach((item) => {
             item.onUpdate(this.team.getSpeed());
@@ -112,6 +124,7 @@ export class MainScene extends g.Scene {
     }
 
     createItem(difficulty: number): void {
+        /*
         const itemIdRand: number = g.game.random.get(0, 100) - difficulty;
         let itemId: number = 0;
         if (itemIdRand > 40) {
@@ -127,6 +140,8 @@ export class MainScene extends g.Scene {
         }
 
         const item = this.itemRepository.create(itemId);
+        */
+        const item = this.itemRepository.create(2);
         item.x = g.game.width;
         item.y = g.game.random.get(0, g.game.height - item.height);
 
@@ -181,6 +196,9 @@ export class MainScene extends g.Scene {
     checkHitGhost(): void {
         this.team.members.forEach((ghost) => {
             this.ghostRepository.ghosts.forEach((target) => {
+                if (target.isDead) {
+                    return;
+                }
                 if (this.team.getIndex(target) >= 0) {
                     return;
                 }
@@ -200,13 +218,27 @@ export class MainScene extends g.Scene {
     checkHitItem(): void {
         this.team.members.forEach((ghost) => {
             this.itemRepository.items.forEach((target) => {
-                if (target.itemId === 2) {
+                if (ghost.isDead) {
                     return;
                 }
+                let hit: boolean = false;
                 if (ghost.x >= target.x - ghost.width && ghost.y >= target.y - ghost.height && ghost.x <= target.x + target.width && ghost.y <= target.y + target.height) {
-                    ghost.feedScore();
-                    this.itemRepository.delete(target);
+                    hit = true;
                 }
+                if (!hit) {
+                    return;
+                }
+
+                if (target.itemId === 2) {
+                    if (this.team.members.length <= 1) {
+                        return;
+                    } else {
+                        this.team.kick(ghost);
+                    }
+                } else {
+                    ghost.feedScore();
+                }
+                this.itemRepository.delete(target);
             });
         });
     }
