@@ -74,13 +74,15 @@ export class MainScene extends g.Scene {
             ghost.onUpdate(this.frameCount, this.team);
         });
         this.itemRepository.items.forEach((item) => {
-           item.onUpdate(this.team.getSpeed());
-           if (item.x < -item.width) {
-               this.itemRepository.delete(item);
-           }
+            item.onUpdate(this.team.getSpeed());
+            if (item.x < -item.width) {
+                this.itemRepository.delete(item);
+            }
         });
 
         this.checkCreateObject();
+        this.checkHitGhost();
+        this.checkHitItem();
 
         // 終了演出のため、残り時間より少し早めにゲームを止める
         if (this.getRemainingTime() === 5 && this.isRunning) {
@@ -108,12 +110,12 @@ export class MainScene extends g.Scene {
 
     }
 
-    createItem(difficulty:number):void {
-        const itemIdRand:number = g.game.random.get(0,100) - difficulty;
-        let itemId:number = 0;
+    createItem(difficulty: number): void {
+        const itemIdRand: number = g.game.random.get(0, 100) - difficulty;
+        let itemId: number = 0;
         if (itemIdRand > 40) {
             itemId = 0;
-        } else if (g.game.random.get(0,2) === 0){
+        } else if (g.game.random.get(0, 2) === 0) {
             itemId = 2;
         } else {
             itemId = 1;
@@ -135,9 +137,9 @@ export class MainScene extends g.Scene {
         }
 
         // 一番最後に作ったアイテムにかぶるY座標の場合、上下いずれかにずらす
-        const lastItem = this.itemRepository.items[this.itemRepository.items.length-1];
+        const lastItem = this.itemRepository.items[this.itemRepository.items.length - 1];
         if (item.y > lastItem.y - lastItem.height && lastItem.y + lastItem.height < item.y) {
-            if (g.game.random.get(0,1) === 0) {
+            if (g.game.random.get(0, 1) === 0) {
                 item.y += item.height;
             } else {
                 item.y -= item.height;
@@ -145,12 +147,12 @@ export class MainScene extends g.Scene {
         }
     }
 
-    createNomadGhost():void {
+    createNomadGhost(): void {
         let ghostId = 0;
         if (this.createdGhostCount < 3) {
-            ghostId = g.game.random.get(0,1);
+            ghostId = g.game.random.get(0, 1);
         } else {
-            ghostId = g.game.random.get(0,11);
+            ghostId = g.game.random.get(0, 11);
         }
 
         const ghost = this.ghostRepository.create(ghostId);
@@ -170,17 +172,44 @@ export class MainScene extends g.Scene {
         return this.remainingTime - Math.floor(this.frameCount / this.game.fps);
     }
 
-    checkCreateObject():void {
-        const difficulty:number = Math.floor(this.frameCount / (g.game.fps * 10)) + 1;
+    /**
+     * ゴーストと野良ゴーストの当たり判定を行う
+     * 野良同士、チーム同士の判定はしない
+     *
+     */
+    checkHitGhost(): void {
+        this.ghostRepository.ghosts.forEach((ghost) => {
+            if (this.team.getIndex(ghost) === undefined) {
+                return;
+            }
+            this.ghostRepository.ghosts.forEach((target) => {
+                if (this.team.getIndex(target) >= 0) {
+                    return;
+                }
+                if (ghost.x >= target.x - ghost.width && ghost.y >= target.y - ghost.height && ghost.x <= target.x + target.width && ghost.y <= target.y + target.height) {
+                    this.team.append(target);
+                    this.team.appendMembersTo(this.gameLayer);
+                    target.scaleX = 1;
+                }
+            });
+        });
+    }
+
+    checkHitItem(): void {
+
+    }
+
+    checkCreateObject(): void {
+        const difficulty: number = Math.floor(this.frameCount / (g.game.fps * 10)) + 1;
         if (this.frameCount % 2 === 0) {
             return;
         }
 
-        if (g.game.random.get(0,100) > difficulty) {
+        if (g.game.random.get(0, 100) > difficulty) {
             return;
         }
 
-        if (g.game.random.get(0,5) === 0) {
+        if (g.game.random.get(0, 5) === 0) {
             this.createNomadGhost();
         } else {
             this.createItem(difficulty);
