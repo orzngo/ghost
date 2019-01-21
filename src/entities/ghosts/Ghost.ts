@@ -1,8 +1,10 @@
 import {MainScene} from "../../scenes/MainScene";
 import {Team} from "./Team";
+import {Item} from "../items/Item";
 
 export class Ghost extends g.E {
     private static ID: number = 0;
+    private static EATING_COUNT: number = g.game.fps / 4;
 
     body: g.FrameSprite;
     face: g.FrameSprite;
@@ -10,6 +12,7 @@ export class Ghost extends g.E {
     id: number;
     isDead: boolean = false;
     actionOrder: ActionOrder | undefined;
+    eatingCount: number = 0;
 
     constructor(params: g.EParameterObject, public ghostParams: GhostParams = DefaultGhost) {
         super(params);
@@ -67,6 +70,10 @@ export class Ghost extends g.E {
         this.actionOrder = order;
     }
 
+    feedScore(): void {
+        this.eatingCount = Ghost.EATING_COUNT;
+    }
+
     onUpdate(frameCount: number, team: Team): void {
         if (this.destroyed()) {
             return;
@@ -75,6 +82,9 @@ export class Ghost extends g.E {
         const teamIndex = team.getIndex(this);
 
         if (teamIndex >= 0) {
+
+            this.updateEating(team);
+
             this.updateOrder(frameCount, team, teamIndex);
 
             if (!this.actionOrder) {
@@ -87,7 +97,7 @@ export class Ghost extends g.E {
                 this.y -= this.ghostParams.upSpeed / g.game.fps;
             }
 
-            if (this.y <0) {
+            if (this.y < 0) {
                 this.y = 0;
             } else if (this.y > g.game.height - this.height) {
                 this.y = g.game.height - this.height;
@@ -97,6 +107,19 @@ export class Ghost extends g.E {
             this.x -= team.getSpeed() / g.game.fps;
             this.modified();
         }
+    }
+
+    private updateEating(team: Team): void {
+        // 前のゴーストが食べてたら自分も食べてる状態になる
+        const front = team.getFrontMember(this);
+        if (front && front.eatingCount > g.game.fps * 0.8) {
+            this.feedScore();
+        }
+
+        if (this.eatingCount > 0) {
+            this.eatingCount--;
+        }
+        this.scaleY = 1.0 - (0.5 * (this.eatingCount / Ghost.EATING_COUNT));
     }
 
     private updateOrder(frameCount: number, team: Team, index: number): void {

@@ -19,6 +19,7 @@ export class MainScene extends g.Scene {
 
 
     // gameまわり
+    score: number = 0;
     team: Team = new Team();
     createdGhostCount: number = 0;
     createdItemCount: number = 0;
@@ -178,10 +179,7 @@ export class MainScene extends g.Scene {
      *
      */
     checkHitGhost(): void {
-        this.ghostRepository.ghosts.forEach((ghost) => {
-            if (this.team.getIndex(ghost) === undefined) {
-                return;
-            }
+        this.team.members.forEach((ghost) => {
             this.ghostRepository.ghosts.forEach((target) => {
                 if (this.team.getIndex(target) >= 0) {
                     return;
@@ -195,8 +193,22 @@ export class MainScene extends g.Scene {
         });
     }
 
+    /**
+     * アイテムとチームの当たり判定
+     *
+     */
     checkHitItem(): void {
-
+        this.team.members.forEach((ghost) => {
+            this.itemRepository.items.forEach((target) => {
+                if (target.itemId === 2) {
+                    return;
+                }
+                if (ghost.x >= target.x - ghost.width && ghost.y >= target.y - ghost.height && ghost.x <= target.x + target.width && ghost.y <= target.y + target.height) {
+                    ghost.feedScore();
+                    this.itemRepository.delete(target);
+                }
+            });
+        });
     }
 
     checkCreateObject(): void {

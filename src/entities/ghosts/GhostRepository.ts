@@ -51,7 +51,7 @@ export class GhostRepository {
 const ghostParams = [
     {
         faceId: 0,
-        speed: 20,
+        speed: 60,
         reactionSpeed: 10,
         upSpeed: 60,
         downSpeed: 60,
@@ -59,7 +59,7 @@ const ghostParams = [
     },
     {
         faceId: 1,
-        speed: 20,
+        speed: 60,
         reactionSpeed: 10,
         upSpeed: 50,
         downSpeed: 50,
@@ -67,7 +67,7 @@ const ghostParams = [
     },
     {
         faceId: 2,
-        speed: 20,
+        speed: 60,
         reactionSpeed: 10,
         upSpeed: 80,
         downSpeed: 80,
@@ -91,7 +91,7 @@ const ghostParams = [
     },
     {
         faceId: 5,
-        speed: 20,
+        speed: 60,
         reactionSpeed: 10,
         upSpeed: 60,
         downSpeed: 60,
@@ -99,7 +99,7 @@ const ghostParams = [
     },
     {
         faceId: 6,
-        speed: 20,
+        speed: 60,
         reactionSpeed: 10,
         upSpeed: 60,
         downSpeed: 60,
@@ -107,7 +107,7 @@ const ghostParams = [
     },
     {
         faceId: 7,
-        speed: 20,
+        speed: 60,
         reactionSpeed: 10,
         upSpeed: 50,
         downSpeed: 50,
@@ -115,7 +115,7 @@ const ghostParams = [
     },
     {
         faceId: 8,
-        speed: 20,
+        speed: 60,
         reactionSpeed: 10,
         upSpeed: 45,
         downSpeed: 45,
@@ -123,7 +123,7 @@ const ghostParams = [
     },
     {
         faceId: 9,
-        speed: 20,
+        speed: 60,
         reactionSpeed: 10,
         upSpeed: 45,
         downSpeed: 45,
@@ -131,7 +131,7 @@ const ghostParams = [
     },
     {
         faceId: 10,
-        speed: 20,
+        speed: 60,
         reactionSpeed: 10,
         upSpeed: 45,
         downSpeed: 45,
@@ -139,7 +139,7 @@ const ghostParams = [
     },
     {
         faceId: 11,
-        speed: 20,
+        speed: 60,
         reactionSpeed: 10,
         upSpeed: 45,
         downSpeed: 45,
