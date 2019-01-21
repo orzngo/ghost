@@ -112,7 +112,7 @@ export class Ghost extends g.E {
     private updateEating(team: Team): void {
         // 前のゴーストが食べてたら自分も食べてる状態になる
         const front = team.getFrontMember(this);
-        if (front && front.eatingCount > g.game.fps * 0.8) {
+        if (front && front.eatingCount > (Ghost.EATING_COUNT * 0.4)) {
             this.feedScore();
         }
 
