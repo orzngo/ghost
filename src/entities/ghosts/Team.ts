@@ -21,8 +21,7 @@ export class Team {
             if (!front) {
                 return;
             }
-            ghost.x = front.x - 16;
-            ghost.y = front.y;
+            ghost.x = front.x - 24;
             ghost.order({frameCount: 0, order: "keep"});
         }
     }

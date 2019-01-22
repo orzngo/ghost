@@ -65,10 +65,6 @@ export class MainScene extends g.Scene {
 
         this.team.append(firstGhost);
         this.team.append(this.ghostRepository.create(0));
-        this.team.append(this.ghostRepository.create(0));
-        this.team.append(this.ghostRepository.create(0));
-        this.team.append(this.ghostRepository.create(0));
-
         this.team.appendMembersTo(this.gameLayer);
 
         this.team.order({frameCount: 0, order: "down"});
@@ -124,12 +120,11 @@ export class MainScene extends g.Scene {
     }
 
     createItem(difficulty: number): void {
-        /*
-        const itemIdRand: number = g.game.random.get(0, 100) - difficulty;
+        const itemIdRand: number = g.game.random.get(0, 100) - (difficulty * 2);
         let itemId: number = 0;
         if (itemIdRand > 40) {
             itemId = 0;
-        } else if (g.game.random.get(0, 2) === 0) {
+        } else if (g.game.random.get(0, 5) > 3) {
             itemId = 2;
         } else {
             itemId = 1;
@@ -140,8 +135,7 @@ export class MainScene extends g.Scene {
         }
 
         const item = this.itemRepository.create(itemId);
-        */
-        const item = this.itemRepository.create(2);
+
         item.x = g.game.width;
         item.y = g.game.random.get(0, g.game.height - item.height);
 
@@ -152,13 +146,20 @@ export class MainScene extends g.Scene {
             return;
         }
 
-        // 一番最後に作ったアイテムにかぶるY座標の場合、上下いずれかにずらす
+        // 一番最後に作ったアイテムにかぶる座標の場合、いずれかにずらす
         const lastItem = this.itemRepository.items[this.itemRepository.items.length - 1];
         if (item.y > lastItem.y - lastItem.height && lastItem.y + lastItem.height < item.y) {
             if (g.game.random.get(0, 1) === 0) {
                 item.y += item.height;
             } else {
                 item.y -= item.height;
+            }
+        }
+        if (item.x > lastItem.x - lastItem.width && lastItem.x + lastItem.width < item.x) {
+            if (g.game.random.get(0, 1) === 0) {
+                item.x += item.width;
+            } else {
+                item.x -= item.width;
             }
         }
     }
@@ -237,10 +238,12 @@ export class MainScene extends g.Scene {
                         return;
                     } else {
                         this.team.kick(ghost);
-                        window.console.log("kicked" + ghost.id);
                     }
                 } else {
                     ghost.feedScore();
+                    const feedMemberNum: number = this.team.members.length - this.team.getIndex(ghost);
+                    this.score += target.score * feedMemberNum;
+                    window.console.log(this.score);
                 }
                 this.itemRepository.delete(target);
             });
@@ -249,9 +252,6 @@ export class MainScene extends g.Scene {
 
     checkCreateObject(): void {
         const difficulty: number = Math.floor(this.frameCount / (g.game.fps * 10)) + 1;
-        if (this.frameCount % 2 === 0) {
-            return;
-        }
 
         if (g.game.random.get(0, 100) > difficulty) {
             return;
