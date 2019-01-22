@@ -21,7 +21,6 @@ export class MainScene extends g.Scene {
     // gameまわり
     score: number = 0;
     team: Team = new Team();
-    createdGhostCount: number = 0;
     createdItemCount: number = 0;
 
     constructor(public remainingTime: number) {
@@ -64,7 +63,6 @@ export class MainScene extends g.Scene {
         firstGhost.y = (g.game.height / 2) - (firstGhost.height / 2);
 
         this.team.append(firstGhost);
-        this.team.append(this.ghostRepository.create(0));
         this.team.appendMembersTo(this.gameLayer);
 
         this.team.order({frameCount: 0, order: "down"});
@@ -89,7 +87,8 @@ export class MainScene extends g.Scene {
             }
         });
 
-        this.checkCreateObject();
+        this.checkCreateNomadGhost();
+        this.checkCreateItem();
         this.checkHitGhost();
         this.checkHitItem();
 
@@ -120,11 +119,11 @@ export class MainScene extends g.Scene {
     }
 
     createItem(difficulty: number): void {
-        const itemIdRand: number = g.game.random.get(0, 100) - (difficulty * 2);
+        const itemIdRand: number = g.game.random.get(0, 100) - Math.floor(difficulty * 2.5);
         let itemId: number = 0;
-        if (itemIdRand > 40) {
+        if (itemIdRand > 50) {
             itemId = 0;
-        } else if (g.game.random.get(0, 5) > 3) {
+        } else if (g.game.random.get(0, 9) > 5) {
             itemId = 2;
         } else {
             itemId = 1;
@@ -165,20 +164,11 @@ export class MainScene extends g.Scene {
     }
 
     createNomadGhost(): void {
-        let ghostId = 0;
-        if (this.createdGhostCount < 3) {
-            ghostId = g.game.random.get(0, 1);
-        } else {
-            ghostId = g.game.random.get(0, 11);
-        }
-
-        const ghost = this.ghostRepository.create(ghostId);
+        const ghost = this.ghostRepository.create(g.game.random.get(1, 11));
         ghost.scaleX = -1;
         ghost.x = g.game.width;
         ghost.y = g.game.random.get(0, g.game.height - ghost.height);
         this.gameLayer.append(ghost);
-        this.createdGhostCount++;
-
     }
 
     finalize(): void {
@@ -250,17 +240,19 @@ export class MainScene extends g.Scene {
         });
     }
 
-    checkCreateObject(): void {
-        const difficulty: number = Math.floor(this.frameCount / (g.game.fps * 10)) + 1;
+    checkCreateNomadGhost(): void {
+        if (this.frameCount % Math.floor(g.game.fps * 3) !== 0) {
+            return;
+        }
+        this.createNomadGhost();
+    }
 
+    checkCreateItem(): void {
+        const difficulty: number = Math.floor(this.frameCount / (g.game.fps * 10)) + 1;
         if (g.game.random.get(0, 100) > difficulty) {
             return;
         }
 
-        if (g.game.random.get(0, 5) === 0) {
-            this.createNomadGhost();
-        } else {
-            this.createItem(difficulty);
-        }
+        this.createItem(difficulty);
     }
 }

@@ -95,7 +95,6 @@ export class Ghost extends g.E {
             } else if (this.actionOrder.order === "up") {
                 this.y -= this.ghostParams.upSpeed / g.game.fps;
             }
-
             if (this.y < 0) {
                 this.y = 0;
             } else if (this.y > g.game.height - this.height) {
@@ -131,17 +130,43 @@ export class Ghost extends g.E {
 
         // 先頭の場合、チームのオーダーを自身のオーダーとする
         if (index === 0) {
-            this.order(team.actionOrder);
+            if (this.ghostParams.faceId === 6) { // あまのじゃく
+                this.order({
+                    order: (team.actionOrder.order === "up") ? "down" : "up",
+                    frameCount: team.actionOrder.frameCount
+                });
+            } else {
+                this.order(team.actionOrder);
+            }
         } else { // 後続の場合、基本的には前方と距離が離れたらupdateする
             const front = team.getFrontMember(this);
             if (front) {
+                if (this.ghostParams.faceId === 6) { // あまのじゃくは直接オーダーを参照し、逆のことを行う
+                    this.order({
+                        order: (team.actionOrder.order === "up") ? "down" : "up",
+                        frameCount: team.actionOrder.frameCount
+                    });
+                    return;
+                }
+                if (this.ghostParams.faceId === 9) { // 直接オーダーを参照する
+                    this.order(team.actionOrder);
+                    return;
+                }
                 const distance = front.y - this.y;
                 if (distance > this.ghostParams.distance) {
                     this.order({order: "down", frameCount: frameCount});
                 } else if (distance < -this.ghostParams.distance) {
                     this.order({order: "up", frameCount: frameCount});
                 } else {
-                    //this.order({order: "keep", frameCount: frameCount});
+                    if (this.ghostParams.faceId === 2) {
+                        this.order({order: "keep", frameCount: frameCount});
+                    }
+                    if (this.ghostParams.faceId === 3 && this.actionOrder.order === "up") {
+                        this.order({order: "keep", frameCount: frameCount});
+                    }
+                    if (this.ghostParams.faceId === 4 && this.actionOrder.order === "down") {
+                        this.order({order: "keep", frameCount: frameCount});
+                    }
                 }
 
             }
