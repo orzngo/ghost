@@ -195,6 +195,9 @@ export class MainScene extends g.Scene {
      */
     checkHitGhost(): void {
         this.team.members.forEach((ghost) => {
+            if (ghost.isDead) {
+                return;
+            }
             this.ghostRepository.ghosts.forEach((target) => {
                 if (target.isDead) {
                     return;
@@ -217,10 +220,10 @@ export class MainScene extends g.Scene {
      */
     checkHitItem(): void {
         this.team.members.forEach((ghost) => {
+            if (ghost.isDead) {
+                return;
+            }
             this.itemRepository.items.forEach((target) => {
-                if (ghost.isDead) {
-                    return;
-                }
                 let hit: boolean = false;
                 if (ghost.x >= target.x - ghost.width && ghost.y >= target.y - ghost.height && ghost.x <= target.x + target.width && ghost.y <= target.y + target.height) {
                     hit = true;
@@ -234,6 +237,7 @@ export class MainScene extends g.Scene {
                         return;
                     } else {
                         this.team.kick(ghost);
+                        window.console.log("kicked" + ghost.id);
                     }
                 } else {
                     ghost.feedScore();

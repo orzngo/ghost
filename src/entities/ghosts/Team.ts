@@ -1,6 +1,8 @@
 import {ActionOrder, Ghost} from "./Ghost";
 import {Layer} from "../layers/Layer";
 
+declare var window: any;
+
 export class Team {
 
     members: Ghost[] = [];
@@ -16,6 +18,9 @@ export class Team {
             ghost.x = (g.game.width / 2) - (ghost.width / 2);
         } else {
             const front = this.getFrontMember(ghost);
+            if (!front) {
+                return;
+            }
             ghost.x = front.x - 16;
             ghost.y = front.y;
             ghost.order({frameCount: 0, order: "keep"});
@@ -43,9 +48,10 @@ export class Team {
         const targetIndex = this.getIndex(ghost);
         const oldMembers = this.members;
         this.members = [];
+
         oldMembers.forEach((member: Ghost, index: number) => {
             if (index !== targetIndex) {
-                this.append(ghost);
+                this.append(member);
             } else {
                 member.kill();
             }
