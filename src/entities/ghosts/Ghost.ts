@@ -1,6 +1,5 @@
-import {MainScene} from "../../scenes/MainScene";
 import {Team} from "./Team";
-import {Item} from "../items/Item";
+
 
 export class Ghost extends g.E {
     private static ID: number = 0;
@@ -40,7 +39,7 @@ export class Ghost extends g.E {
             srcWidth: 32,
             srcHeight: 32,
             scene: this.scene,
-            frames: [this.ghostParams.faceId],
+            frames: [this.ghostParams.type],
             interval: 0
         });
         this.face.x = 32;
@@ -130,7 +129,7 @@ export class Ghost extends g.E {
 
         // 先頭の場合、チームのオーダーを自身のオーダーとする
         if (index === 0) {
-            if (this.ghostParams.faceId === 6) { // あまのじゃく
+            if (this.ghostParams.type === GhostName.BOB) { // あまのじゃく
                 this.order({
                     order: (team.actionOrder.order === "up") ? "down" : "up",
                     frameCount: team.actionOrder.frameCount
@@ -141,14 +140,14 @@ export class Ghost extends g.E {
         } else { // 後続の場合、基本的には前方と距離が離れたらupdateする
             const front = team.getFrontMember(this);
             if (front) {
-                if (this.ghostParams.faceId === 6) { // あまのじゃくは直接オーダーを参照し、逆のことを行う
+                if (this.ghostParams.type === GhostName.BOB) { // あまのじゃくは直接オーダーを参照し、逆のことを行う
                     this.order({
                         order: (team.actionOrder.order === "up") ? "down" : "up",
                         frameCount: team.actionOrder.frameCount
                     });
                     return;
                 }
-                if (this.ghostParams.faceId === 9) { // 直接オーダーを参照する
+                if (this.ghostParams.type === GhostName.MONO) { // 直接オーダーを参照する
                     this.order(team.actionOrder);
                     return;
                 }
@@ -158,13 +157,13 @@ export class Ghost extends g.E {
                 } else if (distance < -this.ghostParams.distance) {
                     this.order({order: "up", frameCount: frameCount});
                 } else {
-                    if (this.ghostParams.faceId === 2) {
+                    if (this.ghostParams.type === GhostName.SAM) {
                         this.order({order: "keep", frameCount: frameCount});
                     }
-                    if (this.ghostParams.faceId === 3 && this.actionOrder.order === "up") {
+                    if (this.ghostParams.type === GhostName.BOON && this.actionOrder.order === "up") {
                         this.order({order: "keep", frameCount: frameCount});
                     }
-                    if (this.ghostParams.faceId === 4 && this.actionOrder.order === "down") {
+                    if (this.ghostParams.type === GhostName.WOON && this.actionOrder.order === "down") {
                         this.order({order: "keep", frameCount: frameCount});
                     }
                 }
@@ -175,7 +174,7 @@ export class Ghost extends g.E {
 }
 
 export interface GhostParams {
-    faceId: number;
+    type: GhostName;
     speed: number;
     reactionSpeed: number;
     upSpeed: number;
@@ -184,7 +183,7 @@ export interface GhostParams {
 }
 
 const DefaultGhost: GhostParams = {
-    faceId: 0,
+    type: 0,
     speed: 5,
     reactionSpeed: 5,
     upSpeed: 32,
@@ -195,4 +194,19 @@ const DefaultGhost: GhostParams = {
 export interface ActionOrder {
     frameCount: number;
     order: "up" | "down" | "keep";
+}
+
+export enum GhostName {
+    BENI = 0,
+    MOMO,
+    SAM,
+    BOON,
+    WOON,
+    TAKESHI,
+    BOB,
+    ONI,
+    GAKI,
+    MONO,
+    BATSU,
+    NAGA
 }

@@ -4,7 +4,6 @@ export class ItemRepository {
     items: Item[] = [];
 
     constructor(public scene: g.Scene) {
-
     }
 
     // factoryつくんのめんどい

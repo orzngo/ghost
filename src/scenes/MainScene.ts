@@ -24,7 +24,7 @@ export class MainScene extends g.Scene {
     createdItemCount: number = 0;
 
     constructor(public remainingTime: number) {
-        super({game: g.game, assetIds: ["ghost", "item", "face"]});
+        super({game: g.game, assetIds: ["ghost", "item", "face", "meet", "eat", "dead"]});
         this.ghostRepository = new GhostRepository(this);
         this.itemRepository = new ItemRepository(this);
         this.backgroundLayer = new Layer(this, "background");
@@ -200,6 +200,7 @@ export class MainScene extends g.Scene {
                     this.team.append(target);
                     this.team.appendMembersTo(this.gameLayer);
                     target.scaleX = 1;
+                    (<g.AudioAsset>this.assets["meet"]).play();
                 }
             });
         });
@@ -228,12 +229,13 @@ export class MainScene extends g.Scene {
                         return;
                     } else {
                         this.team.kick(ghost);
+                        (<g.AudioAsset>this.assets["dead"]).play();
                     }
                 } else {
                     ghost.feedScore();
                     const feedMemberNum: number = this.team.members.length - this.team.getIndex(ghost);
                     this.score += target.score * feedMemberNum;
-                    window.console.log(this.score);
+                    (<g.AudioAsset>this.assets["eat"]).play();
                 }
                 this.itemRepository.delete(target);
             });
