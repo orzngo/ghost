@@ -3,6 +3,7 @@ import {GhostRepository} from "../entities/ghosts/GhostRepository";
 import {Layer} from "../entities/layers/Layer";
 import {Team} from "../entities/ghosts/Team";
 import {ItemRepository} from "../entities/items/ItemRepository";
+import {StatusBar} from "../entities/uis/StatusBar";
 
 declare var window: any;
 
@@ -17,6 +18,8 @@ export class MainScene extends g.Scene {
     gameLayer: Layer;
     topLayer: Layer;
 
+    statusBar: StatusBar;
+
 
     // gameまわり
     score: number = 0;
@@ -28,7 +31,7 @@ export class MainScene extends g.Scene {
         this.ghostRepository = new GhostRepository(this);
         this.itemRepository = new ItemRepository(this);
         this.backgroundLayer = new Layer(this, "background");
-        this.gameLayer = new Layer(this, "main");
+        this.gameLayer = new Layer(this, "main", {width: g.game.width, height: g.game.height - StatusBar.HEIGHT});
         this.topLayer = new Layer(this, "top");
 
         this.append(this.backgroundLayer);
@@ -58,9 +61,16 @@ export class MainScene extends g.Scene {
         });
         this.team = new Team();
 
+
+        this.statusBar = new StatusBar(this);
+        this.topLayer.append(this.statusBar);
+        this.statusBar.x = 0;
+        this.statusBar.y = this.topLayer.height - StatusBar.HEIGHT;
+
+
         const firstGhost = this.ghostRepository.create(0);
-        firstGhost.x = (g.game.width / 2) - (firstGhost.width / 2);
-        firstGhost.y = (g.game.height / 2) - (firstGhost.height / 2);
+        firstGhost.x = (this.gameLayer.width / 2) - (firstGhost.width / 2);
+        firstGhost.y = (this.gameLayer.height / 2) - (firstGhost.height / 2);
 
         this.team.append(firstGhost);
         this.team.appendMembersTo(this.gameLayer);
@@ -75,7 +85,7 @@ export class MainScene extends g.Scene {
 
         this.team.onUpdate();
         this.ghostRepository.ghosts.forEach((ghost) => {
-            ghost.onUpdate(this.frameCount, this.team);
+            ghost.onUpdate(this.frameCount, this.team, this.gameLayer);
             if (ghost.y < -ghost.height || ghost.x < -ghost.width) {
                 this.ghostRepository.delete(ghost);
             }
@@ -135,8 +145,8 @@ export class MainScene extends g.Scene {
 
         const item = this.itemRepository.create(itemId);
 
-        item.x = g.game.width;
-        item.y = g.game.random.get(0, g.game.height - item.height);
+        item.x = this.gameLayer.width;
+        item.y = g.game.random.get(0, this.gameLayer.height - item.height);
 
         this.gameLayer.append(item);
 
@@ -166,8 +176,8 @@ export class MainScene extends g.Scene {
     createNomadGhost(): void {
         const ghost = this.ghostRepository.create(g.game.random.get(1, 11));
         ghost.scaleX = -1;
-        ghost.x = g.game.width;
-        ghost.y = g.game.random.get(0, g.game.height - ghost.height);
+        ghost.x = this.gameLayer.width;
+        ghost.y = g.game.random.get(0, this.gameLayer.height - ghost.height);
         this.gameLayer.append(ghost);
     }
 

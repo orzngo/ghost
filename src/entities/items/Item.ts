@@ -1,3 +1,5 @@
+import {Layer} from "../layers/Layer";
+
 export class Item extends g.FrameSprite {
     score: number;
     id: number;

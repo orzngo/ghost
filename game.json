@@ -126,6 +126,11 @@
 			"type": "script",
 			"path": "script/entities/layers/LayerManager.js",
 			"global": true
+		},
+		"StatusBar": {
+			"type": "script",
+			"path": "script/entities/uis/StatusBar.js",
+			"global": true
 		}
 	},
 	"environment": {

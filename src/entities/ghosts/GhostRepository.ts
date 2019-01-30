@@ -71,7 +71,7 @@ ghostParams[GhostName["MOMO"]] = {
 
 ghostParams[GhostName["SAM"]] = {
     type: GhostName["SAM"],
-    speed: 100,
+    speed: 70,
     reactionSpeed: 10,
     upSpeed: 250,
     downSpeed: 250,
@@ -87,7 +87,7 @@ ghostParams[GhostName["BOON"]] = {
 };
 ghostParams[GhostName["WOON"]] = {
     type: GhostName["WOON"],
-    speed: 80,
+    speed: 85,
     reactionSpeed: 10,
     upSpeed: 60,
     downSpeed: 250,
@@ -119,7 +119,7 @@ ghostParams[GhostName["ONI"]] = {
 };
 ghostParams[GhostName["GAKI"]] = {
     type: GhostName["GAKI"],
-    speed: 110,
+    speed: 80,
     reactionSpeed: 10,
     upSpeed: 120,
     downSpeed: 120,
@@ -127,7 +127,7 @@ ghostParams[GhostName["GAKI"]] = {
 };
 ghostParams[GhostName["MONO"]] = {
     type: GhostName["MONO"],
-    speed: 170,
+    speed: 160,
     reactionSpeed: 10,
     upSpeed: 70,
     downSpeed: 70,
@@ -135,7 +135,7 @@ ghostParams[GhostName["MONO"]] = {
 };
 ghostParams[GhostName["BATSU"]] = {
     type: GhostName["BATSU"],
-    speed: 200,
+    speed: 80,
     reactionSpeed: 10,
     upSpeed: 150,
     downSpeed: 150,

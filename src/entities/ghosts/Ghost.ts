@@ -1,4 +1,5 @@
 import {Team} from "./Team";
+import {Layer} from "../layers/Layer";
 
 
 export class Ghost extends g.E {
@@ -73,7 +74,7 @@ export class Ghost extends g.E {
         this.eatingCount = Ghost.EATING_COUNT;
     }
 
-    onUpdate(frameCount: number, team: Team): void {
+    onUpdate(frameCount: number, team: Team, layer: Layer): void {
         if (this.destroyed()) {
             return;
         }
@@ -96,8 +97,8 @@ export class Ghost extends g.E {
             }
             if (this.y < 0) {
                 this.y = 0;
-            } else if (this.y > g.game.height - this.height) {
-                this.y = g.game.height - this.height;
+            } else if (this.y > layer.height - this.height) {
+                this.y = layer.height - this.height;
             }
             this.modified();
         } else { // 野良ゴーストの処理
