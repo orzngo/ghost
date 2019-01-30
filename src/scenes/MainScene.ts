@@ -25,6 +25,7 @@ export class MainScene extends g.Scene {
     score: number = 0;
     team: Team = new Team();
     createdItemCount: number = 0;
+    tappedPoint: g.CommonOffset | undefined = undefined;
 
     constructor(public remainingTime: number) {
         super({game: g.game, assetIds: ["ghost", "item", "face", "meet", "eat", "dead"]});
@@ -102,6 +103,7 @@ export class MainScene extends g.Scene {
         this.checkHitGhost();
         this.checkHitItem();
 
+
         // 終了演出のため、残り時間より少し早めにゲームを止める
         if (this.getRemainingTime() === 5 && this.isRunning) {
             this.isRunning = false;
@@ -116,9 +118,10 @@ export class MainScene extends g.Scene {
         // 上昇中でなかったら上昇命令を出す
         if (this.team.actionOrder.order !== "up") {
             this.team.order({frameCount: this.frameCount, order: "up"});
-
         }
+        this.tappedPoint = e.point;
     }
+
 
     onPointUp(e: g.PointUpEvent): void {
         //上昇中だったら下降命令を出す
@@ -213,7 +216,16 @@ export class MainScene extends g.Scene {
                     (<g.AudioAsset>this.assets["meet"]).play();
                 }
             });
+
+            if (this.tappedPoint !== undefined && this.team.members.length > 1 && this.team.getIndex(ghost) === 0) {
+                if (this.tappedPoint.x >= ghost.x && this.tappedPoint.x <= ghost.x + ghost.width && this.tappedPoint.y >= ghost.y && this.tappedPoint.y <= ghost.y + ghost.height) {
+                    this.team.kick(this.team.members[0]);
+                    (<g.AudioAsset>this.assets["dead"]).play();
+                    this.tappedPoint = undefined;
+                }
+            }
         });
+        this.tappedPoint = undefined;
     }
 
     /**
