@@ -18,4 +18,8 @@ export class StatusBar extends g.E {
         this.width = this.background.width;
         this.height = this.background.height;
     }
+
+    updateScore(score: number): void {
+
+    }
 }
